@@ -97,7 +97,7 @@ probability = loaded_model.predict_proba(dataToPredict)
 
 if st.button('PREDICT'):
     risk_percentage = probability[0][1] * 100
-    if risk_percentage > 0:
+    if risk_percentage > 5:
         st.write(f"There is a {risk_percentage:.2f}% risk of Heart Disease.")
     else:
         st.write(f"No Heart Disease Risk.")
