@@ -93,10 +93,12 @@ filename = 'random_forest.pkl'
 loaded_model = pickle.load(open(filename, 'rb'))
 
 prediction = loaded_model.predict(dataToPredict)
+probability = loaded_model.predict_proba(dataToPredict)
 
 if st.button('PREDICT'):
-    if prediction == 0:
-        st.write('No Heart Disease Risk')
+    risk_percentage = probability[0][1] * 100
+    if risk_percentage > 0:
+        st.write(f"There is a {risk_percentage:.2f}% risk of Heart Disease.")
     else:
-        st.write('There is a Risk of Heart Disease, Consider getting a detailed medical test.')
+        st.write(f"No Heart Disease Risk.")
 
