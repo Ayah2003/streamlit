@@ -37,22 +37,29 @@ st.write("""
 
 st.sidebar.title('Please, fill in your information to predict your heart condition')
 
-gender = st.sidebar.selectbox("Select your gender", (None, "Female", "Male"))
-age = st.sidebar.number_input("Select your age", min_value=0, max_value=110, value=None)
-cigsPerDay = st.sidebar.selectbox("How many cigarettes do you smoke a day?", [None] + list(range(1, 100)))
+gender = st.sidebar.selectbox("Select your gender", ("", "Female", "Male"))
+age = st.sidebar.selectbox("Select your age", [""] + list(map(str, range(1, 111))))
+cigsPerDay = st.sidebar.selectbox("How many cigarettes do you smoke a day?", [""] + list(map(str, range(101))))
 
-BPMeds = st.sidebar.selectbox("Are you on blood pressure medication?", (None, "No", "Yes"))
+BPMeds = st.sidebar.selectbox("Are you on blood pressure medication?", ["", "No", "Yes"])
 
-prevalentStroke = st.sidebar.selectbox("Did you have a stroke?", (None, "No", "Yes"))
+prevalentStroke = st.sidebar.selectbox("Did you have a stroke?", ["", "No", "Yes"])
 
-prevalentHypertension = st.sidebar.selectbox("Do you have hypertension?", (None, "No", "Yes"))
-diabetes = st.sidebar.selectbox("Do you have diabetes?", (None, "No", "Yes"))
-totalCholesterolLevel = st.sidebar.number_input("Enter your cholesterol level", min_value=0, max_value=1000, value=None)
-systolicBP = st.sidebar.number_input("Enter your systolic blood pressure (mm Hg)", min_value=0, max_value=400, value=None)
-diastolicBP = st.sidebar.number_input("Enter your diastolic blood pressure (mm Hg)", min_value=0, max_value=400, value=None)
-BMI = st.sidebar.number_input("Enter your BMI", min_value=0, max_value=200, value=None)
-heartRate = st.sidebar.number_input("Enter your heart rate", min_value=0, max_value=500, value=None)
-glucose = st.sidebar.number_input("Enter your glucose level (mg/dL)", min_value=0, max_value=200, value=None)
+prevalentHypertension = st.sidebar.selectbox("Do you have hypertension?", ["", "No", "Yes"])
+diabetes = st.sidebar.selectbox("Do you have diabetes?", ["", "No", "Yes"])
+totalCholesterolLevel = st.sidebar.selectbox("Enter your cholesterol level", [""] + list(map(str, range(1001))))
+systolicBP = st.sidebar.selectbox("Enter your systolic blood pressure (mm Hg)", [""] + list(map(str, range(401))))
+diastolicBP = st.sidebar.selectbox("Enter your diastolic blood pressure (mm Hg)", [""] + list(map(str, range(401))))
+BMI = st.sidebar.selectbox("Enter your BMI", [""] + list(map(str, range(201))))
+heartRate = st.sidebar.selectbox("Enter your heart rate", [""] + list(map(str, range(501))))
+glucose = st.sidebar.selectbox("Enter your glucose level (mg/dL)", [""] + list(map(str, range(201))))
+
+# Function to convert formatted number with comma to float
+def convert_to_float(value):
+    if value:
+        value = value.replace(',', '.')
+        return float(value)
+    return None
 
 dataToPredict = pd.DataFrame({
     "gender": [gender],
@@ -62,21 +69,21 @@ dataToPredict = pd.DataFrame({
     "prevalentStroke": [prevalentStroke],
     "prevalentHypertension": [prevalentHypertension],
     "diabetes": [diabetes],
-    "totalCholesterolLevel": [totalCholesterolLevel],
-    "systolicBP": [systolicBP],
-    "diastolicBP": [diastolicBP],
-    "BMI": [BMI],
-    "heartRate": [heartRate],
-    "glucose": [glucose]
+    "totalCholesterolLevel": [convert_to_float(totalCholesterolLevel)],
+    "systolicBP": [convert_to_float(systolicBP)],
+    "diastolicBP": [convert_to_float(diastolicBP)],
+    "BMI": [convert_to_float(BMI)],
+    "heartRate": [convert_to_float(heartRate)],
+    "glucose": [convert_to_float(glucose)]
 })
 
 filename = 'random_forest.pkl'
 loaded_model = pickle.load(open(filename, 'rb'))
 
 if st.button('PREDICT'):
-    if (gender is None) or (age is None) or (cigsPerDay is None) or (BPMeds is None) or (prevalentStroke is None) or \
-            (prevalentHypertension is None) or (diabetes is None) or (totalCholesterolLevel is None) or \
-            (systolicBP is None) or (diastolicBP is None) or (BMI is None) or (heartRate is None) or (glucose is None):
+    if (gender == "") or (age == "") or (cigsPerDay == "") or (BPMeds == "") or (prevalentStroke == "") or \
+            (prevalentHypertension == "") or (diabetes == "") or (totalCholesterolLevel == "") or \
+            (systolicBP == "") or (diastolicBP == "") or (BMI == "") or (heartRate == "") or (glucose == ""):
         st.write("Please fill in all the information before predicting.")
     else:
         # Mapping the data as explained in the script above
