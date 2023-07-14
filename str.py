@@ -101,4 +101,4 @@ if st.button('PREDICT'):
         st.write(f"There is a {risk_percentage:.2f}% risk of Heart Disease.")
     else:
         st.write(f"No Heart Disease Risk.")
-
+             
