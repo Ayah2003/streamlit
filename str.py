@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 # Import necessary libraries
 
 import streamlit as st
@@ -15,13 +12,11 @@ import pickle
 from sklearn.ensemble import RandomForestClassifier
 
 
-# In[2]:
-
 
 # create streamlit interface, asome info about the app
 st.write("""
          ## In few seconds, you can calculate your risk of developing heart disease!
-      the app is built based on the "Framingham dataset", using machine learning algorithm called Random Forest, with an accuracy of 88%.  
+      the app is built using a machine learning algorithm called Random Forest, with an accuracy of 88%.  
          """)
 st.write("""
          ### To predict your heart disease risk:
@@ -30,75 +25,65 @@ st.write("""
          """)
 
 
-# In[9]:
-
 
 # Thesidebar function from streamlit is used to create a sidebar for users to input their information.
 
-st.sidebar.title('Please, fill your information to predict your heart condition')
+st.sidebar.title('Please, fill in your information to predict your heart condition')
 
-gender=st.sidebar.selectbox("Select your gender", ("Female", "Male" ))
-age = st.sidebar.number_input("Select your age", min_value=0, max_value=110, value=24)
-cigsPerDay = st.sidebar.selectbox("How many cigarettes do you smoke a day?",  range(0, 100))
+gender = st.sidebar.selectbox("Select your gender", ("", "Female", "Male"))
+age = st.sidebar.number_input("Select your age", min_value=0, max_value=110, value=0)
+cigsPerDay = st.sidebar.selectbox("How many cigarettes do you smoke a day?", [0] + list(range(1, 100)))
 
-BPMeds= st.sidebar.selectbox("Are you in blood pressure medication?", options=("No", "Yes"))
+BPMeds = st.sidebar.selectbox("Are you on blood pressure medication?", ["", "No", "Yes"])
 
-prevalentStroke = st.sidebar.selectbox("Did you have a stroke?", options=("No", "Yes"))
+prevalentStroke = st.sidebar.selectbox("Did you have a stroke?", ["", "No", "Yes"])
 
-prevalentHypertension=st.sidebar.selectbox("Do you have Hypertension?", options=("No", "Yes"))
-diabetes=st.sidebar.selectbox("Do you have diabetes?", options=("No", "Yes"))
-totalCholesterolLevel=st.sidebar.number_input("Enter your cholesterol level",  min_value=0, max_value=1000, value=180)
-systolicBP =st.sidebar.number_input("Enter your systolic blood pressure (mm Hg)",  min_value=0, max_value=400, value=120)
-diastolicBP =st.sidebar.number_input("Enter your diastolic blood pressure (mm Hg)",  min_value=0, max_value=400, value=80)
-BMI =st.sidebar.number_input("Select your BMI",  min_value=0, max_value=200, value=22)
-heartRate = st.sidebar.number_input("Heart Rate", min_value=0, max_value=500, value=300)
-glucose = st.sidebar.number_input("Glucose in mg/dL", min_value=0, max_value=200, value=90)
-
-
+prevalentHypertension = st.sidebar.selectbox("Do you have hypertension?", ["", "No", "Yes"])
+diabetes = st.sidebar.selectbox("Do you have diabetes?", ["", "No", "Yes"])
+totalCholesterolLevel = st.sidebar.number_input("Enter your cholesterol level", min_value=0, max_value=1000, value=0)
+systolicBP = st.sidebar.number_input("Enter your systolic blood pressure (mm Hg)", min_value=0, max_value=400, value=0)
+diastolicBP = st.sidebar.number_input("Enter your diastolic blood pressure (mm Hg)", min_value=0, max_value=400, value=0)
+BMI = st.sidebar.number_input("Enter your BMI", min_value=0, max_value=200, value=0)
+heartRate = st.sidebar.number_input("Enter your heart rate", min_value=0, max_value=500, value=0)
+glucose = st.sidebar.number_input("Enter your glucose level (mg/dL)", min_value=0, max_value=200, value=0)
 
 dataToPredict = pd.DataFrame({
-   "gender": [gender],
-   "age": [age],
-   "cigsPerDay": [cigsPerDay],
-   "BPMeds": [BPMeds],
-   "prevalentStroke": [prevalentStroke],
-   "prevalentHypertension": [prevalentHypertension],
-   "diabetes": [diabetes],
-   "totalCholesterolLevel": [totalCholesterolLevel],
-   "systolicBP": [systolicBP],
-   "diastolicBP": [diastolicBP],
-   "BMI": [BMI],
-   "heartRate": [heartRate],
-   "glucose": [glucose]
- })
-
-
-# In[12]:
-
-
-
-# Mapping the data as explained in the script above
-dataToPredict.replace("Female",0,inplace=True)
-dataToPredict.replace("Male",1,inplace=True)
-
-
-dataToPredict.replace("Yes",1,inplace=True)
-dataToPredict.replace("No",0,inplace=True)
-
-
-# In[14]:
-
+    "gender": [gender],
+    "age": [age],
+    "cigsPerDay": [cigsPerDay],
+    "BPMeds": [BPMeds],
+    "prevalentStroke": [prevalentStroke],
+    "prevalentHypertension": [prevalentHypertension],
+    "diabetes": [diabetes],
+    "totalCholesterolLevel": [totalCholesterolLevel],
+    "systolicBP": [systolicBP],
+    "diastolicBP": [diastolicBP],
+    "BMI": [BMI],
+    "heartRate": [heartRate],
+    "glucose": [glucose]
+})
 
 filename = 'random_forest.pkl'
 loaded_model = pickle.load(open(filename, 'rb'))
 
-prediction = loaded_model.predict(dataToPredict)
-probability = loaded_model.predict_proba(dataToPredict)
-
 if st.button('PREDICT'):
-    risk_percentage = probability[0][1] * 100
-    if risk_percentage > 5:
-        st.write(f"There is a {risk_percentage:.2f}% risk of Heart Disease.")
+    if (gender == "") or (age == 0) or (cigsPerDay == 0) or (BPMeds == "") or (prevalentStroke == "") or \
+            (prevalentHypertension == "") or (diabetes == "") or (totalCholesterolLevel == 0) or \
+            (systolicBP == 0) or (diastolicBP == 0) or (BMI == 0) or (heartRate == 0) or (glucose == 0):
+        st.write("Please fill in all the information before predicting.")
     else:
-        st.write(f"No Heart Disease Risk.")
-             
+        # Mapping the data as explained in the script above
+        dataToPredict.replace("Female", 0, inplace=True)
+        dataToPredict.replace("Male", 1, inplace=True)
+
+        dataToPredict.replace("Yes", 1, inplace=True)
+        dataToPredict.replace("No", 0, inplace=True)
+
+        prediction = loaded_model.predict(dataToPredict)
+        probability = loaded_model.predict_proba(dataToPredict)
+
+        risk_percentage = probability[0][1] * 100
+        if risk_percentage > 5:
+            st.write(f"There is a {risk_percentage:.2f}% risk of Heart Disease.")
+        else:
+            st.write("No Heart Disease Risk.")
