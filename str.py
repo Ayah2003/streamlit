@@ -24,7 +24,7 @@ st.write("""
       the app is built based on the "Framingham dataset", using machine learning algorithm called Random Forest, with an accuracy of 88%.  
          """)
 st.write("""
-         ### To predict your heart disease status:
+         ### To predict your heart disease risk:
          ###### 1- Enter the parameters that best describe you.
          ###### 2- Press the "Predict" button and wait for the result.
          """)
