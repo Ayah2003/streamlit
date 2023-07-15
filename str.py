@@ -38,18 +38,18 @@ st.write("""
 st.sidebar.title('Please, fill in your information to predict your heart condition')
 
 gender = st.sidebar.selectbox("Select your gender", ("", "Female", "Male"))
-age = st.sidebar.number_input("Select your age", min_value=0, max_value=110, value=0)
-cigsPerDay = st.sidebar.number_input("How many cigarettes do you smoke a day?", min_value=0, max_value=100, value=0)
-BPMeds = st.sidebar.selectbox("Are you on blood pressure medication?", ("", "No", "Yes"))
-prevalentStroke = st.sidebar.selectbox("Did you have a stroke?", ("", "No", "Yes"))
-prevalentHypertension = st.sidebar.selectbox("Do you have hypertension?", ("", "No", "Yes"))
-diabetes = st.sidebar.selectbox("Do you have diabetes?", ("", "No", "Yes"))
-totalCholesterolLevel = st.sidebar.number_input("Enter your cholesterol level", min_value=0, max_value=1000, value=0, format="%f")
-systolicBP = st.sidebar.number_input("Enter your systolic blood pressure (mm Hg)", min_value=0, max_value=400, value=0, format="%f")
-diastolicBP = st.sidebar.number_input("Enter your diastolic blood pressure (mm Hg)", min_value=0, max_value=400, value=0, format="%f")
-BMI = st.sidebar.number_input("Enter your BMI", min_value=0, max_value=200, value=0, format="%f")
-heartRate = st.sidebar.number_input("Enter your heart rate", min_value=0, max_value=500, value=0, format="%f")
-glucose = st.sidebar.number_input("Enter your glucose level (mg/dL)", min_value=0, max_value=200, value=0, format="%f")
+age = st.sidebar.selectbox("Select your age", [""] + list(map(str, range(111))))
+cigsPerDay = st.sidebar.selectbox("How many cigarettes do you smoke a day?", [""] + list(map(str, range(101))))
+BPMeds = st.sidebar.selectbox("Are you on blood pressure medication?", ["", "No", "Yes"])
+prevalentStroke = st.sidebar.selectbox("Did you have a stroke?", ["", "No", "Yes"])
+prevalentHypertension = st.sidebar.selectbox("Do you have hypertension?", ["", "No", "Yes"])
+diabetes = st.sidebar.selectbox("Do you have diabetes?", ["", "No", "Yes"])
+totalCholesterolLevel = st.sidebar.selectbox("Enter your cholesterol level", [""] + list(map(str, range(1001))))
+systolicBP = st.sidebar.selectbox("Enter your systolic blood pressure (mm Hg)", [""] + list(map(str, range(401))))
+diastolicBP = st.sidebar.selectbox("Enter your diastolic blood pressure (mm Hg)", [""] + list(map(str, range(401))))
+BMI = st.sidebar.selectbox("Enter your BMI", [""] + list(map(str, range(201))))
+heartRate = st.sidebar.selectbox("Enter your heart rate", [""] + list(map(str, range(501))))
+glucose = st.sidebar.selectbox("Enter your glucose level (mg/dL)", [""] + list(map(str, range(201))))
 
 dataToPredict = pd.DataFrame({
     "gender": [gender],
@@ -71,9 +71,9 @@ filename = 'random_forest.pkl'
 loaded_model = pickle.load(open(filename, 'rb'))
 
 if st.button('PREDICT'):
-    if (gender == "") or (age == 0) or (cigsPerDay == 0) or (BPMeds == "") or (prevalentStroke == "") or \
-            (prevalentHypertension == "") or (diabetes == "") or (totalCholesterolLevel == 0) or \
-            (systolicBP == 0) or (diastolicBP == 0) or (BMI == 0) or (heartRate == 0) or (glucose == 0):
+    if (gender == "") or (age == "") or (cigsPerDay == "") or (BPMeds == "") or (prevalentStroke == "") or \
+            (prevalentHypertension == "") or (diabetes == "") or (totalCholesterolLevel == "") or \
+            (systolicBP == "") or (diastolicBP == "") or (BMI == "") or (heartRate == "") or (glucose == ""):
         st.write("Please fill in all the information before predicting.")
     else:
         # Mapping the data as explained in the script above
